@@ -1,5 +1,7 @@
 // index.js
 
+// index.js
+
 module.exports = profile   
     
 function profile () {
@@ -49,7 +51,7 @@ function profile () {
       <div class=${css.cardText}>${cardText}</div>
     </div>
   `
- 
+  
   function hoverCard (event) {
     el.appendChild(cardContainer_hover)
     el.removeChild(cardContainer)
