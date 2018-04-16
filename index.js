@@ -1,59 +1,62 @@
-var minixhr = require('minixhr')
+// index.js
 
-module.exports = getGithubData
-
-function getGithubData (callback) {
-
-  minixhr(url, response)
-
-  function response (json) {
-    var userprofiles = localStorage['userprofiles']
-    if (userprofiles) {
-      return callback(JSON.parse(userprofiles))
-    }
-
-    var allusers = JSON.parse(json)
-    // console.info(allusers)
-    var userprofiles = []
-
-    allusers.forEach(function (nameEach) {
-      var reponame = nameEach.full_name
-      var repoURL = 'https://api.github.com/repos/' + reponame
-      minixhr(repoURL, response2)
-     })
-    function response2 (data) {
-      var obj = JSON.parse(data)
-      var repoFilesAndFoldersURL = obj.branches_url.replace('{/branch}', '/' + obj.default_branch)
-
-      minixhr(repoFilesAndFoldersURL, function (data) {
-        var obj = JSON.parse(data)
-        var filesAndFoldersURL = obj.commit.commit.tree.url
-
-        minixhr(filesAndFoldersURL, function (data) {
-          var obj = JSON.parse(data)
-          obj.tree.forEach(function (file) {
-            if (file.path === 'config.json') {
-              var configJsonURL = file.url
-              minixhr(configJsonURL, function (data) {
-                try {
-                  var obj = JSON.parse(data)
-                  var json = atob(obj.content)
-                  var profile = JSON.parse(json)
-                } catch (error) {
-                  profile = { name: 'error', url: configJsonURL }
-                }
-
-                userprofiles.push(profile)
-                if (allusers.length == userprofiles.length) {
-                  localStorage['userprofiles'] = JSON.stringify(userprofiles)
-                  callback(userprofiles)
-                }
-
-              })
-            }
-          })
-        })
-      })
-    }
+module.exports = profile   
+    
+function profile () {
+  var name              = 'Nina'
+  var username          = 'ninabreznik'
+  var cardText          = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostru '
+  var imageUrl          = 'https://nomadlist.com/assets/img/cities/phuket-thailand-500px.jpg'
+  var city              = 'Berlin'
+  var twitter           = `https://twitter.com/${username}`
+  var github            = `https://github.com/${username}`
+  var codepen           = `https://codepen.io/${username}`
+  
+  var gitter           =  `https://gitter.im/${username}/~embed`
+  
+// HTML
+  var cardContainer = bel`
+    <div class=${css.cardContainer}>
+      <img src=${imageUrl} class=${css.profileImage}>
+      <div class=${css.cardTitle}>${name}</div>
+      <div class=${css.cardSubtitle}>@${username}</div>
+    </div>
+  `
+  var el = bel`
+    <div class=${css.card} onmouseenter=${hoverCard} onmouseleave=${unhoverCard}>
+      ${cardContainer}
+    </div>
+  `
+  // HELPERS
+  /* --------------------------------------------------------
+                    CARD EVENT LISTENERS
+  ---------------------------------------------------------- */
+  /* --------------- hover & unhover the card ---------------*/
+  var cardContainer_hover = bel`
+    <div class=${css.cardContainer_hover}>
+      <div class=${css.cardGitterChat} ><iframe class=${css.iframe} src=${gitter}></iframe></div>
+      
+      <div class=${css.cardSocial}>
+        <a href=${twitter} target='_blank'>
+          <i class="${css.cardSocial_fontawesome} fa fa-twitter" aria-hidden="true"></i></a>
+        <a href=${github} target='_blank'>
+          <i class="${css.cardSocial_fontawesome} fa fa-github" aria-hidden="true"></i>
+        </a>
+        <a href=${codepen} target='_blank'>
+          <i class="${css.cardSocial_fontawesome} fa fa-codepen" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class=${css.cardText}>${cardText}</div>
+    </div>
+  `
+  
+  function hoverCard (event) {
+    el.appendChild(cardContainer_hover)
+    el.removeChild(cardContainer)
   }
-}
+  function unhoverCard (event) {
+    el.removeChild(cardContainer_hover)
+    el.appendChild(cardContainer)
+  }
+  return el
+}    
