@@ -1,141 +1,219 @@
+<!doctype html>	
+	<html>
+	  <head>
+	    <meta charset="utf-8">
+	    <script src="https://unpkg.com/npm-require"></script>
+	
 
-
-
-
-
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <script src="https://unpkg.com/npm-require"></script>
-    
-  </head>
-  <body>
-    <script>
- var profile = require('./index.js')   
+	  </head>
+	  <body>
+	    <script>
+	   
+	   
+	var bel = require('bel')
+	var csjs = require('csjs-inject')
+	  
+	/* --------------------------------------------------------
+	FONTS
+	---------------------------------------------------------- */
+	var fonts             = ['https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css', 'https://fonts.googleapis.com/css?family=Ubuntu']
+	var fontAwesome       = bel`<link href=${fonts[0]} rel='stylesheet' type='text/css'>`
+	var fontUbuntu        = bel`<link href=${fonts[1]} rel="stylesheet">`
+	var font_ubuntu       = 'Ubuntu, sans-serif'
+	document.head.appendChild(fontAwesome)
+	document.head.appendChild(fontUbuntu)
+	// COLORS
+	var backgroundWhite   = '#f6f6f6'
+	var fontGrey          = '#606060'
+	var borderGrey        = '#fafafa'
+	var green             = '#2a9c6d'
+	var red               = '#d41304'
+	// CSS
+	var css = csjs`
+	.card {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-family: ${font_ubuntu};
+	  background-color: ${backgroundWhite};
+	  border: 2px solid ${borderGrey};
+	  box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+	  width: 300px;
+	  height: 280px;
+	  padding: 1em;
+	}
+	.cardContainer,
+	.cardContainer_hover {
+	  display: flex;
+	  align-items: center;
+	  flex-direction: column;
+	  -webkit-animation: transitionIn 0.3s ease-in;
+	  -moz-animation: transitionIn 0.3s ease-in;
+	  -o-animation: transitionIn 0.3s ease-in;
+	  animation: transitionIn 0.3s ease-in;
+	}
+	.profileImage {
+	   border-radius: 50%;
+	  width: 10em;
+	  height: 10em;
+	}
+	.cardTitle {
+	  margin-top: 1em;
+	  font-weight: bold;
+	  font-size: 2em;
+	}
+	.cardSubtitle {
+	  margin-top: .3em;
+	  font-size: 1.3em;
+	  color: ${green};
+	}
+	.cardText {
+	  font-size: .2em;
+	  line-height: 110%;
+	  text-weight: bold;
+	  border: 2px dotted ${green};
+	  border-radius: 5px;
+	  padding: .5em;
+	  text-align: center;
+	}
+	.cardSocial {
+	  margin-top: .1em;
+	}
+	.cardSocial a {
+	  text-decoration: none;
+	}
+	.cardSocial_fontawesome {
+	  color: ${green};
+	  font-size: 2em;
+	  padding: .3em;
+	}
+	.cardSocial_fontawesome:hover {
+	  opacity: 0.9;
+	}
+	.cardGitterChat {
+	  height: 170px;
+	  width: 113px;
+	  overflow: hidden;
+	  margin-top: 1em;
+	  padding: .1px .1px;
+	  text-decoration: none;
+	  border-radius: .1px;
+	  background-color: ${green};
+	}
+	.cardGitterChat:hover {
+	  opacity: 0.9;
+	  cursor: pointer;
+	}
+	@keyframes transitionIn {
+	  0% {opacity: 0.1}
+	  100% {opacity: 1}
+	}
+	.iframe {
+	    position:relative;
+	    top: -39%;
+	    left: -40%;
+	     height: 300px;
+	    width: 200px;
+	    transform: scale(0.55);
+	    margin-top: .1px;
+	    text-align:center;
+	    color:${green};
+	    background:${green};
+	    height: 300px;
+	    width: 200px;
+	    transform: scale(0.55);
+	    margin:.1px ;
+	    padding:.1px;
+	  }
+	`
+	function profile () {
+	   var data= getGithubData ()
    
-var bel = require('bel')
-var csjs = require('csjs-inject')
-/* --------------------------------------------------------
-FONTS
----------------------------------------------------------- */
-var fonts             = ['https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css', 'https://fonts.googleapis.com/css?family=Ubuntu']
-var fontAwesome       = bel`<link href=${fonts[0]} rel='stylesheet' type='text/css'>`
-var fontUbuntu        = bel`<link href=${fonts[1]} rel="stylesheet">`
-var font_ubuntu       = 'Ubuntu, sans-serif'
-document.head.appendChild(fontAwesome)
-document.head.appendChild(fontUbuntu)
-// COLORS
-var backgroundWhite   = '#f6f6f6'
-var fontGrey          = '#606060'
-var borderGrey        = '#fafafa'
-var green             = '#2a9c6d'
-var red               = '#d41304'
-// CSS
-var css = csjs`
-.card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: ${font_ubuntu};
-  background-color: ${backgroundWhite};
-  border: 2px solid ${borderGrey};
-  box-shadow: 0 1px 2px rgba(34,25,25,0.4);
-  width: 300px;
-  height: 280px;
-  padding: 1em;
-}
-.cardContainer,
-.cardContainer_hover {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  -webkit-animation: transitionIn 0.3s ease-in;
-  -moz-animation: transitionIn 0.3s ease-in;
-  -o-animation: transitionIn 0.3s ease-in;
-  animation: transitionIn 0.3s ease-in;
-}
-.profileImage {
-   border-radius: 50%;
-  width: 10em;
-  height: 10em;
-}
-.cardTitle {
-  margin-top: 1em;
-  font-weight: bold;
-  font-size: 2em;
-}
-.cardSubtitle {
-  margin-top: .3em;
-  font-size: 1.3em;
-  color: ${green};
-}
-.cardText {
-  font-size: .2em;
-  line-height: 110%;
-  text-weight: bold;
-  border: 2px dotted ${green};
-  border-radius: 5px;
-  padding: .5em;
-  text-align: center;
-}
-.cardSocial {
-  margin-top: .1em;
-}
-.cardSocial a {
-  text-decoration: none;
-}
-.cardSocial_fontawesome {
-  color: ${green};
-  font-size: 2em;
-  padding: .3em;
-}
-.cardSocial_fontawesome:hover {
-  opacity: 0.9;
-}
-.cardGitterChat {
-  height: 170px;
-  width: 113px;
-  overflow: hidden;
-  margin-top: 1em;
-  padding: .1px .1px;
-  text-decoration: none;
-  border-radius: .1px;
-  background-color: ${green};
-}
-.cardGitterChat:hover {
-  opacity: 0.9;
-  cursor: pointer;
-}
-@keyframes transitionIn {
-  0% {opacity: 0.1}
-  100% {opacity: 1}
-}
-.iframe {
-    position:relative;
-    top: -39%;
-    left: -40%;
-     height: 300px;
-    width: 200px;
-    transform: scale(0.55);
-    margin-top: .1px;
-    text-align:center;
-    color:${green};
-    background:${green};
-    height: 300px;
-    width: 200px;
-    transform: scale(0.55);
-    margin:.1px ;
-    padding:.1px;
-  }
-`
- 
-var x= profile()
-document.body.appendChild(x)
-   
-   
-   
-   
-    </script>
-  </body>
-</html>
+	    function getGithubData () {
+		    var data1= [
+		    {
+			"repo": "nicco88/personal-portfolio",
+			"url": "https://api.github.com/repos/nicco88/personal-portfolio",
+			"username": "ninabreznik",
+			"time": "2018-04-01T17:50:29Z"
+		    },
+		    {
+			"repo": "freeCodeCamp/devdocs",
+			"url": "https://api.github.com/repos/freeCodeCamp/devdocs",
+			"username": "serapath",
+			"time": "2018-03-27T04:51:07Z"
+		    }]
+		    return  data1
+	  }
+	  
+	  var ninasProfile      = data[0]
+    var username          = ninasProfile.username
+	  
+	  var name              = 'Nina'
+	  var cardText          = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostru '
+	  var imageUrl          = 'https://nomadlist.com/assets/img/cities/phuket-thailand-500px.jpg'
+	  var city              = 'Berlin'
+	  var twitter           = `https://twitter.com/${username}`
+	  var github            = `https://github.com/${username}`
+	  var codepen           = `https://codepen.io/${username}`
+	  
+	  function makeLinkUrl (username) {
+	    return  `https://gitter.im/${username}/~embed`
+	  }
+	 
+	// HTML
+	  var cardContainer = bel`
+	    <div class=${css.cardContainer}>
+	      <img src=${imageUrl} class=${css.profileImage}>
+	      <div class=${css.cardTitle}>${name}</div>
+	      <div class=${css.cardSubtitle}>@${username}</div>
+	    </div>
+	  `
+	  var el = bel`
+	    <div class=${css.card} onmouseenter=${hoverCard} onmouseleave=${unhoverCard}>
+	      ${cardContainer}
+	    </div>
+	  `
+	  // HELPERS
+	  /* --------------------------------------------------------
+	                    CARD EVENT LISTENERS
+	  ---------------------------------------------------------- */
+	  /* --------------- hover & unhover the card ---------------*/
+	  var cardContainer_hover = bel`
+	    <div class=${css.cardContainer_hover}>
+	      <div class=${css.cardGitterChat} ><iframe class=${css.iframe} src=${ makeLinkUrl (username)}></iframe></div>
+	      
+	      <div class=${css.cardSocial}>
+	        <a href=${twitter} target='_blank'>
+	          <i class="${css.cardSocial_fontawesome} fa fa-twitter" aria-hidden="true"></i></a>
+	        <a href=${github} target='_blank'>
+	          <i class="${css.cardSocial_fontawesome} fa fa-github" aria-hidden="true"></i>
+	        </a>
+	        <a href=${codepen} target='_blank'>
+	          <i class="${css.cardSocial_fontawesome} fa fa-codepen" aria-hidden="true"></i>
+	        </a>
+	      </div>
+	      <div class=${css.cardText}>${cardText}</div>
+	    </div>
+	  `
+	  
+	  function hoverCard (event) {
+	    el.appendChild(cardContainer_hover)
+	    el.removeChild(cardContainer)
+	  }
+	  function unhoverCard (event) {
+	    el.removeChild(cardContainer_hover)
+	    el.appendChild(cardContainer)
+	  }
+	  return el
+	}
+	 
+	var x= profile()
+	document.body.appendChild(x)
+	   
+	   
+	   
+	   
+	    </script>
+	  </body>
+	</html>
