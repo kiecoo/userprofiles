@@ -1,4 +1,4 @@
-//111
+//333
 <!doctype html>	
 	<html>
 	  <head>
@@ -127,10 +127,14 @@
 	    padding:.1px;
 	  }
 	`
-	function profile () {
-	   var data= getGithubData ()
-   
-	    function getGithubData () {
+	function profile (done) {
+	   getGithubData (next)
+           function next (data) {
+		    var element1 = bel`<div>${data.map(x => bel`<p>${x.user}</p>`)}</div>`
+		    done(element1)
+		  }
+
+	    function getGithubData (done) {
 		    var data1= [
 		    {
 			"repo": "nicco88/personal-portfolio",
@@ -144,7 +148,7 @@
 			"username": "serapath",
 			"time": "2018-03-27T04:51:07Z"
 		    }]
-		    return  data1
+		    done(data1)
 	  }
 	  
 	  var ninasProfile      = data[0]
@@ -209,8 +213,9 @@
 	  return el
 	}
 	 
-	var x= profile()
-	document.body.appendChild(x)
+	profile(done)
+        function done (el) { document.body.appendChild(el) }
+
 	   
 	   
 	   
